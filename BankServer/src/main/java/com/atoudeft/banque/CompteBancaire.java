@@ -21,6 +21,7 @@ public abstract class CompteBancaire implements Serializable {
             t[i] = (char)((int)(Math.random()*10)+'0');
         }
         t[5] = (char)((int)(Math.random()*26)+'A');
+        System.out.println("44dfkm");
         return new String(t);
     }
 
