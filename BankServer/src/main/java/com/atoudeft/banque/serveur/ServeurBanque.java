@@ -75,7 +75,7 @@ public class ServeurBanque extends Serveur {
     public String list() {
         String s = "";
         for (Connexion cnx:connectes) {
-            s += ((ConnexionBanque)cnx).getNumeroCompteClient() + ":";
+            s += ((ConnexionBanque)cnx).getNumeroCompteClient() +":";
         }
         return s;
     }
@@ -84,6 +84,16 @@ public class ServeurBanque extends Serveur {
      * du TP).
      */
     public void supprimeInactifs() {
-        //À définir :
+        ListIterator<Connexion> iterator = connectes.listIterator();
+
+        while (iterator.hasNext()) {
+            ConnexionBanque cnx  = (ConnexionBanque) iterator.next();
+
+            if (cnx.estInactifDepuis(DELAI_INACTIVITE)) {
+                cnx.envoyer("END");
+                cnx.close();
+                iterator.remove();
+            }
+        }
     }
 }
