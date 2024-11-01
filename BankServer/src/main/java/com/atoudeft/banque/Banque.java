@@ -97,7 +97,7 @@ public class Banque implements Serializable {
         /*À compléter et modifier :
             - Vérifier que le numéro a entre 6 et 8 caractères et ne contient que des lettres majuscules et des chiffres.
               Sinon, retourner false.
-            - Vérifier que le nip a entre 4 et 5 caractères et ne contient que des chiffres. Sinon,
+               - Vérifier que le nip a entre 4 et 5 caractères et ne contient que des chiffres. Sinon,
               retourner false.
             - Vérifier s'il y a déjà un compte-client avec le numéro, retourner false.
             - Sinon :
@@ -107,7 +107,28 @@ public class Banque implements Serializable {
                 . Créer un compte-chèque avec ce numéro et l'ajouter au compte-client;
                 . Ajouter le compte-client à la liste des comptes et retourner true.
          */
-        return this.comptes.add(new CompteClient(numCompteClient,nip)); //À modifier
+        String chiffreAlhabet = "[A-Z0-9]+";
+        String chiffre = "[0-9]+";
+        if (!(numCompteClient.length() >= 6 && numCompteClient.length() <= 8) || !numCompteClient.matches(chiffreAlhabet)) {
+            return false;
+        }
+        if(!(nip.length() >= 4 && nip.length() <=5 && nip.matches(chiffre))){
+            return false;
+        }
+        for(int i=0; i<comptes.size();i++) {
+            if(comptes.get(i).getNumero().equals(numCompteClient)){
+                return false;
+            } else {
+                CompteClient client = new CompteClient(numCompteClient, nip);
+                String numeroGenerer = CompteBancaire.genereNouveauNumero();
+                if(!(CompteBancaire.genereNouveauNumero().equals(comptes.get(i).getNumero()))){
+                    CompteCheque cheque = new CompteCheque(numeroGenerer, TypeCompte.CHEQUE);
+                    client.ajouter(cheque);
+                    this.comptes.add(client);
+                }
+            }
+        }
+        return true;
     }
 
     /**

@@ -30,4 +30,28 @@ public class CompteClient implements Serializable {
     public boolean ajouter(CompteBancaire compte) {
         return this.comptes.add(compte);
     }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getNip() {
+        return nip;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+
+    public List<CompteBancaire> getComptes() {
+        return comptes;
+    }
+
+    public void setComptes(List<CompteBancaire> comptes) {
+        this.comptes = comptes;
+    }
 }
