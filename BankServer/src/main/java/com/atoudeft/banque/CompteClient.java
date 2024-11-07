@@ -9,29 +9,6 @@ public class CompteClient implements Serializable {
     private String nip;
     private List<CompteBancaire> comptes;
 
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public void setComptes(List<CompteBancaire> comptes) {
-        this.comptes = comptes;
-    }
-
-    public void setNip(String nip) {
-        this.nip = nip;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public String getNip() {
-        return nip;
-    }
-
-    public List<CompteBancaire> getComptes() {
-        return comptes;
-    }
 
     /**
      * Crée un compte-client avec un numéro et un nip.
