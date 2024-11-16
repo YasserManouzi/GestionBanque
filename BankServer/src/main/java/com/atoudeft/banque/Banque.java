@@ -9,6 +9,7 @@ import java.util.List;
 public class Banque implements Serializable {
     private String nom;
     private List<CompteClient> comptes;
+    CompteCheque cheque;
 
     public Banque(String nom) {
         this.nom = nom;
@@ -138,15 +139,14 @@ public class Banque implements Serializable {
      * @return numéro du compte-chèque du client ayant le numéro de compte-client
      */
     public String getNumeroCompteParDefaut(String numCompteClient) {
-        String numCompteCheque;
-        for(CompteClient compteClient: comptes) {
-            numCompteClient = compteClient.getNumero();
-
+        for (CompteClient compteClient : comptes) {
+            if (numCompteClient.equals(compteClient.getNumero())) {
+                if (cheque != null && cheque.getType() == TypeCompte.CHEQUE) {
+                    return cheque.getNumero();
+                }
+            }
         }
-
-        numCompteCheque = numCompteClient;
-
-
-        return numCompteCheque;
+        return null;
     }
+
 }
