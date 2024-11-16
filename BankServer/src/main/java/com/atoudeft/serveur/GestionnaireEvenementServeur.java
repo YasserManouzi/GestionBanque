@@ -40,6 +40,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         ConnexionBanque cnx;
         String msg, typeEvenement, argument, numCompteClient, nip, numeroCompteClient;
         String[] t;
+        CompteClient compteClient;
 
         if (source instanceof Connexion) {
             cnx = (ConnexionBanque) source;
@@ -82,6 +83,27 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
                     break;
+                /******************* COMPTE ÉPARGNE *******************/
+                case "EPARGNE":
+                    String numeroGenererEpargne = CompteBancaire.genereNouveauNumero();
+                    banque = serveurBanque.getBanque();
+
+                    numCompteClient = cnx.getNumeroCompteClient();
+                    CompteEpargne epargne = new CompteEpargne(numeroGenererEpargne, TypeCompte.EPARGNE, 0.05);
+                    try {
+                        compteClient = banque.getCompteClient(numCompteClient);
+                        if (compteClient == null) {
+                            cnx.envoyer("EPARGNE NO");
+                            break;
+                        }
+                        if (compteClient.ajouter(epargne)) {
+                            cnx.envoyer("EPARGNE OK");
+                        } else {
+                            cnx.envoyer("EPARGNE NO");
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 /******************* COMMANDE POUR UNE CONNECTION *******************/
                 case "CONNECT":
                     boolean dejaConnecte = false;
@@ -107,7 +129,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
 
                     if (!dejaConnecte) {
-                        CompteClient compteClient = serveurBanque.getBanque().getCompteClient(numCompteClient);
+                        compteClient = serveurBanque.getBanque().getCompteClient(numCompteClient);
 
                         if (compteClient == null) {
                             System.out.println("Le compte n'existe pas pour le numéro de compte: " + numCompteClient);
