@@ -38,8 +38,9 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         ServeurBanque serveurBanque = (ServeurBanque)serveur;
         Banque banque;
         ConnexionBanque cnx;
-        String msg, typeEvenement, argument, numCompteClient, nip, numeroCompteClient;
+        String msg, typeEvenement, argument, numCompteClient, nip;
         String[] t;
+        CompteClient compteClient;
 
         if (source instanceof Connexion) {
             cnx = (ConnexionBanque) source;
@@ -70,61 +71,38 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     else {
                         numCompteClient = t[0];
                         nip = t[1];
-
                         banque = serveurBanque.getBanque();
                         if (banque.ajouter(numCompteClient,nip)) {
                             cnx.setNumeroCompteClient(numCompteClient);
                             cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
                             cnx.envoyer("NOUVEAU OK " + t[0] + " cree");
-
                         }
                         else
                             cnx.envoyer("NOUVEAU NO "+t[0]+" existe");
                     }
                     break;
-                /******************* COMMANDE POUR UNE CONNECTION *******************/
-                case "CONNECT":
-                    boolean dejaConnecte = false;
-                    argument = evenement.getArgument();
-                    t = argument.split(":");
-                    numCompteClient = t[0];
-                    nip = t[1];
-                    System.out.println(nip + numCompteClient);
+                /******************* COMPTE ÉPARGNE *******************/
+                case "EPARGNE":
+                    String numeroGenererEpargne = CompteBancaire.genereNouveauNumero();
+                    banque = serveurBanque.getBanque();
 
-                    System.out.println("Tentative de connexion avec numéro de compte: " + numCompteClient + " et NIP: " + nip);
-
-                    for (Object connexion : serveurBanque.connectes) {
-                        ConnexionBanque connexionBanque = (ConnexionBanque) connexion;
-
-                        System.out.println("Vérification de connexion existante pour le compte: " + connexionBanque.getNumeroCompteClient());
-
-                        if (connexionBanque.getNumeroCompteClient().equals(numCompteClient)) {
-                            System.out.println("Le client est déjà connecté avec le numéro de compte: " + numCompteClient);
-                            cnx.envoyer("CONNECT NO");
-                            dejaConnecte = true;
+                    numCompteClient = cnx.getNumeroCompteClient();
+                    CompteEpargne epargne = new CompteEpargne(numeroGenererEpargne, TypeCompte.EPARGNE, 0.05);
+                    try {
+                        compteClient = banque.getCompteClient(numCompteClient);
+                        if (compteClient == null) {
+                            cnx.envoyer("EPARGNE NO");
                             break;
                         }
-                    }
-
-                    if (!dejaConnecte) {
-                        CompteClient compteClient = serveurBanque.getBanque().getCompteClient(numCompteClient);
-
-                        if (compteClient == null) {
-                            System.out.println("Le compte n'existe pas pour le numéro de compte: " + numCompteClient);
-                            cnx.envoyer("CONNECT NO");
-                        } else if (!compteClient.getNip().equals(nip)) {
-                            System.out.println("Le NIP est incorrect pour le numéro de compte: " + numCompteClient);
-                            cnx.envoyer("CONNECT NO");
+                        if (compteClient.ajouter(epargne)) {
+                            cnx.envoyer("EPARGNE OK");
                         } else {
-                            System.out.println("Connexion réussie pour le numéro de compte: " + numCompteClient);
-                            cnx.setNumeroCompteClient(numCompteClient);
-                            cnx.setNumeroCompteActuel(serveurBanque.getBanque().getNumeroCompteParDefaut(numCompteClient));
-                            cnx.envoyer("CONNECT OK");
+                            cnx.envoyer("EPARGNE NO");
                         }
+                    }catch(Exception e){
+                        e.printStackTrace();
                     }
-                    break;
-
-                /******************* TRAITEMENT PAR DÉFAUT *******************/
+                    /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
                     msg = (evenement.getType() + " " + evenement.getArgument()).toUpperCase();
                     cnx.envoyer(msg);
