@@ -75,10 +75,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                         banque = serveurBanque.getBanque();
                         if (banque.ajouter(numCompteClient,nip)) {
-                            System.out.println(banque.getCompteClient(numCompteClient));
                             cnx.setNumeroCompteClient(numCompteClient);
                             cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
-
                             cnx.envoyer("NOUVEAU OK " + t[0] + " cree");
                             cnx.envoyer(banque.getNumeroCompteParDefaut(numCompteClient));
 
@@ -92,21 +90,36 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                 case "EPARGNE":
                     String numeroGenererEpargne = CompteBancaire.genereNouveauNumero();
                     banque = serveurBanque.getBanque();
+                    boolean unique = true;
 
                     numCompteClient = cnx.getNumeroCompteClient();
-                    CompteEpargne epargne = new CompteEpargne(numeroGenererEpargne, TypeCompte.EPARGNE, 0.05);
                     compteClient = banque.getCompteClient(numCompteClient);
                     if (compteClient == null) {
                         cnx.envoyer("EPARGNE NO");
                         break;
                     }
-                    if (compteClient.ajouter(epargne)) {
-                        cnx.envoyer("EPARGNE OK");
-                    } else {
+                    do {
+                        numeroGenererEpargne = CompteBancaire.genereNouveauNumero();
+                        unique = true;
+                        for (CompteBancaire compte : compteClient.getComptes() ) {
+                            if (compte.getNumero().equals(numeroGenererEpargne)) {
+                                unique = false;
+                                break;
+                            }
+                        }
+                    } while (!unique);
+                    if(compteClient.possedeCompteEpargne()){
                         cnx.envoyer("EPARGNE NO");
+                    } else {
+                        CompteEpargne epargne = new CompteEpargne(numeroGenererEpargne, TypeCompte.EPARGNE, 0.05);
+                        if (compteClient.ajouter(epargne)) {
+                            cnx.envoyer("EPARGNE OK");
+                        } else {
+                            cnx.envoyer("EPARGNE NO");
+                        }
+
                     }
                     break;
-
                 /******************* DEPOT DANS UN COMPTE *******************/
                 case "DEPOT":
                     if (cnx.getNumeroCompteClient() == null) {
@@ -114,14 +127,14 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         break;
                     }
                     argument = evenement.getArgument();
-                    montant = Double.parseDouble(argument);
+                    montant = Double.parseDouble(argument.trim());
                     banque = serveurBanque.getBanque();
                     compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
                     if (compteClient == null) {
                         cnx.envoyer("DEPOT NO");
                         break;
                     }
-                    numCompteClient = cnx.getNumeroCompteClient();
+                    numCompteClient = cnx.getNumeroCompteActuel();
                     for (CompteBancaire compteBancaire : compteClient.getComptes()) {
                         if (compteBancaire.getNumero().equals(numCompteClient)) {
                             if (compteBancaire.crediter(montant)) {
@@ -141,14 +154,14 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         break;
                     }
                     argument = evenement.getArgument();
-                    montant = Double.parseDouble(argument);
+                    montant = Double.parseDouble(argument.trim());
                     banque = serveurBanque.getBanque();
                     compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
                     if (compteClient == null) {
                         cnx.envoyer("RETRAIT NO");
                         break;
                     }
-                    numCompteClient = cnx.getNumeroCompteClient();
+                    numCompteClient = cnx.getNumeroCompteActuel();
                     for (CompteBancaire compteBancaire : compteClient.getComptes()) {
                         if (compteBancaire.getNumero().equals(numCompteClient)) {
                             if (compteBancaire.debiter(montant)) {
@@ -172,8 +185,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("FACTURE NO");
                             break;
                         }
-                        numeroFacture = t[0];
-                        montant = Double.parseDouble(t[1]);
+                        montant = Double.parseDouble(t[0]);
+                        numeroFacture = t[1];
                         description = t[2];
 
                         banque = serveurBanque.getBanque();
@@ -182,10 +195,10 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("FACTURE NO");
                             break;
                         }
-                        numCompteClient = cnx.getNumeroCompteClient();
+                        numCompteClient = cnx.getNumeroCompteActuel();
                         for (CompteBancaire compteBancaire : compteClient.getComptes()) {
                             if (compteBancaire.getNumero().equals(numCompteClient)) {
-                                if (compteBancaire.payerFacture(numeroFacture, montant, description)) {
+                                if (compteBancaire.payerFacture(numeroFacture,montant,description)) {
                                     cnx.envoyer("FACTURE OK - Nouveau solde : " + compteBancaire.getSolde());
                                 } else {
                                     cnx.envoyer("FACTURE NO");
@@ -193,9 +206,8 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                 break;
                             }
                         }
-                        break;
                     }
-
+                    break;
                 /******************* TRANSFERT *******************/
                 case "TRANSFER":
                     argument = evenement.getArgument();

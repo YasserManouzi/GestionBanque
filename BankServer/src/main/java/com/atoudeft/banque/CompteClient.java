@@ -51,4 +51,13 @@ public class CompteClient implements Serializable {
     public List<CompteBancaire> getComptes() {
         return comptes;
     }
+    public boolean possedeCompteEpargne() {
+        for (CompteBancaire compte : comptes) {
+            if (compte instanceof CompteEpargne) {
+                return true; // Le client a déjà un compte épargne
+            }
+        }
+        return false; // Aucun compte épargne trouvé
+    }
+
 }

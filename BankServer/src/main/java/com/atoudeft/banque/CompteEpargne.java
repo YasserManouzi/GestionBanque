@@ -51,10 +51,6 @@ public class CompteEpargne extends CompteBancaire{
         if(solde > 0 && solde < limite){
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant - frais;
-                System.out.println("Détails de la facture");
-                System.out.println("Numéro de facture: " + numeroFacture + "\n" +
-                        "Le montant à payer: " + montant + "\n" +
-                        "Description de la facture" + description);
                 return true;
             } else {
                 return false;
@@ -62,10 +58,6 @@ public class CompteEpargne extends CompteBancaire{
         } else {
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant;
-                System.out.println("Détails de la facture");
-                System.out.println("Numéro de facture: " + numeroFacture + "\n" +
-                        "Le montant à payer: " + montant + "\n" +
-                        "Description de la facture" + description);
                 return true;
             } else {
                 return false;
@@ -78,7 +70,6 @@ public class CompteEpargne extends CompteBancaire{
         if(solde > 0 && solde < limite){
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant - frais;
-                System.out.println("Transfert d'un montant de " + montant + "au compte " + numeroCompteDestinataire);
                 return true;
             } else {
                 return false;
@@ -86,7 +77,6 @@ public class CompteEpargne extends CompteBancaire{
         } else {
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant;
-                System.out.println("Un montant de " + montant + "a été transférer au compte " + numeroCompteDestinataire);
                 return true;
             } else {
                 return false;
