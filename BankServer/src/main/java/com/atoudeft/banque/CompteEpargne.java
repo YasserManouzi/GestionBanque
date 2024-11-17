@@ -75,7 +75,23 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean transferer(double montant, String numeroCompteDestinataire) {
-        return false;
+        if(solde > 0 && solde < limite){
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant - frais;
+                System.out.println("Transfert d'un montant de " + montant + "au compte " + numeroCompteDestinataire);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant;
+                System.out.println("Un montant de " + montant + "a été transférer au compte " + numeroCompteDestinataire);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public double getTauxInterets() {

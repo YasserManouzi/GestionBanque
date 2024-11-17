@@ -46,6 +46,11 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean transferer(double montant, String numeroCompteDestinataire) {
+        if(montant <= solde && montant>0){
+            solde = solde - montant;
+            System.out.println("Un montant de " + montant + "a été transférer au compte " + numeroCompteDestinataire);
+            return true;
+        }
         return false;
     }
 }
