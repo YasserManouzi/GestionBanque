@@ -38,7 +38,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
         ServeurBanque serveurBanque = (ServeurBanque)serveur;
         Banque banque;
         ConnexionBanque cnx;
-        String msg, typeEvenement, argument, numCompteClient, nip, numeroFacture, description, numeroCompteReceveur;
+        String msg, typeEvenement, argument, numCompteClient, nip,numeroFacture, description, numeroCompteReceveur, typeCompteChoisi, numCompteCheque, numCompteEpargne;
         String[] t;
         double montant;
         CompteClient compteClient;
@@ -75,9 +75,13 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
 
                         banque = serveurBanque.getBanque();
                         if (banque.ajouter(numCompteClient,nip)) {
+                            System.out.println(banque.getCompteClient(numCompteClient));
                             cnx.setNumeroCompteClient(numCompteClient);
                             cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
+
                             cnx.envoyer("NOUVEAU OK " + t[0] + " cree");
+                            cnx.envoyer(banque.getNumeroCompteParDefaut(numCompteClient));
+
 
                         }
                         else
@@ -101,6 +105,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     } else {
                         cnx.envoyer("EPARGNE NO");
                     }
+                    break;
 
                 /******************* DEPOT DANS UN COMPTE *******************/
                 case "DEPOT":
@@ -237,8 +242,9 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     boolean Connecte = false;
                     argument = evenement.getArgument();
                     t = argument.split(":");
+                    banque =serveurBanque.getBanque();
                     if (t.length<2) {
-                        cnx.envoyer("NOUVEAU NO");
+                        cnx.envoyer("CONNECT NO");
                     }
                     else {
                     numCompteClient = t[0];
@@ -249,6 +255,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         if (connexionBanque.getNumeroCompteClient().equals(numCompteClient)) {
                             Connecte = true;
                             cnx.envoyer("CONNECT OK");
+                            cnx.setNumeroCompteActuel(banque.getNumeroCompteParDefaut(numCompteClient));
                             break;
                         } else {
                             cnx.envoyer("CONNECT NO");
@@ -263,6 +270,30 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                     }
                     break;
                     }
+                case "SELECT":
+                    argument = evenement.getArgument();
+                    t = argument.split(" ");
+                    typeCompteChoisi = t[0];
+                    numCompteClient = cnx.getNumeroCompteClient();
+                    banque = serveurBanque.getBanque();
+                    if(cnx.getNumeroCompteClient() == null || (!cnx.getNumeroCompteClient().equals(numCompteClient))){
+                        cnx.envoyer("SELECT NO");
+                    }else {
+                        if(typeCompteChoisi.equals("cheque")){
+                            numCompteCheque = banque.getNumeroCompteParDefaut(numCompteClient);
+                            cnx.envoyer("Voici votre numéro de compte chèque : " + numCompteCheque);
+                            cnx.setNumeroCompteActuel(numCompteCheque);
+
+                    }else if(typeCompteChoisi.equals("epargne")) {
+                            numCompteEpargne = banque.getNumeroCompteEpargne(numCompteClient);
+                            cnx.envoyer("Voici votre numéro de compte épargne : " + numCompteEpargne);
+                            cnx.setNumeroCompteActuel(numCompteEpargne);
+
+                    }else {
+                            cnx.envoyer("Type de compte invalide");
+                        }
+                    }
+                    break;
 
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
