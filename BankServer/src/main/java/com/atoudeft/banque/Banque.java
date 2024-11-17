@@ -95,58 +95,62 @@ public class Banque implements Serializable {
      * @return true si le compte a été créé correctement
      */
     public boolean ajouter(String numCompteClient, String nip) {
-        /*À compléter et modifier :
-            - Vérifier que le numéro a entre 6 et 8 caractères et ne contient que des lettres majuscules et des chiffres.
-              Sinon, retourner false.
-               - Vérifier que le nip a entre 4 et 5 caractères et ne contient que des chiffres. Sinon,
-              retourner false.
-            - Vérifier s'il y a déjà un compte-client avec le numéro, retourner false.
-            - Sinon :
-                . Créer un compte-client avec le numéro et le nip;
-                . Générer (avec CompteBancaire.genereNouveauNumero()) un nouveau numéro de compte bancaire qui n'est
-                  pas déjà utilisé;
-                . Créer un compte-chèque avec ce numéro et l'ajouter au compte-client;
-                . Ajouter le compte-client à la liste des comptes et retourner true.
-         */
-        String chiffreAlhabet = "[A-Z0-9]+";
-        String chiffre = "[0-9]+";
-        if (!(numCompteClient.length() >= 6 && numCompteClient.length() <= 8) || !numCompteClient.matches(chiffreAlhabet)) {
+        if (numCompteClient.length() < 6 || numCompteClient.length() > 8 || !numCompteClient.matches("[A-Z0-9]+")) {
             return false;
         }
-        if(!(nip.length() >= 4 && nip.length() <=5 && nip.matches(chiffre))){
+
+        if (nip.length() < 4 || nip.length() > 5 || !nip.matches("[0-9]+")) {
             return false;
         }
-        for(int i=0; i<comptes.size();i++) {
-            if(comptes.get(i).getNumero().equals(numCompteClient)){
+
+        for (CompteClient compte : comptes) {
+            if (compte.getNumero().equals(numCompteClient)) {
                 return false;
-            } else {
-                CompteClient client = new CompteClient(numCompteClient, nip);
-                String numeroGenerer = CompteBancaire.genereNouveauNumero();
-                if(!(CompteBancaire.genereNouveauNumero().equals(comptes.get(i).getNumero()))){
-                    CompteCheque cheque = new CompteCheque(numeroGenerer, TypeCompte.CHEQUE);
-                    client.ajouter(cheque);
-                    this.comptes.add(client);
-                }
             }
         }
+
+        CompteClient client = new CompteClient(numCompteClient, nip);
+
+        String numeroGenerer;
+        boolean unique;
+        do {
+            numeroGenerer = CompteBancaire.genereNouveauNumero();
+            unique = true;
+            for (CompteClient compte : comptes) {
+                if (compte.getNumero().equals(numeroGenerer)) {
+                    unique = false;
+                    break;
+                }
+            }
+        } while (!unique);
+
+        CompteCheque cheque = new CompteCheque(numeroGenerer, TypeCompte.CHEQUE);
+        client.ajouter(cheque);
+
+        comptes.add(client);
         return true;
     }
+
 
     /**
      * Retourne le numéro du compte-chèque d'un client à partir de son numéro de compte-client.
      *
      * @param numCompteClient numéro de compte-client
-     * @return numéro du compte-chèque du client ayant le numéro de compte-client
+     * @return numéro du compte-chèque du client ayant le numéro de compte-client, ou null si introuvable
      */
     public String getNumeroCompteParDefaut(String numCompteClient) {
         for (CompteClient compteClient : comptes) {
             if (numCompteClient.equals(compteClient.getNumero())) {
-                if (cheque != null && cheque.getType() == TypeCompte.CHEQUE) {
-                    return cheque.getNumero();
+                for (CompteBancaire cheque : compteClient.getComptes()) {
+                    if (cheque != null && cheque.getType() == TypeCompte.CHEQUE) {
+                        return cheque.getNumero(); // Retourne le numéro du compte-chèque trouvé
+                    }
                 }
+                return null;
             }
         }
         return null;
     }
 
 }
+
