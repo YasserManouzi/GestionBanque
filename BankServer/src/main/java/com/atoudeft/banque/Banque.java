@@ -23,13 +23,14 @@ public class Banque implements Serializable {
      * @return le compte-client s'il a été trouvé. Sinon, retourne null
      */
     public CompteClient getCompteClient(String numeroCompteClient) {
-        CompteClient cpt = new CompteClient(numeroCompteClient,"");
-        int index = this.comptes.indexOf(cpt);
-        if (index != -1)
-            return this.comptes.get(index);
-        else
-            return null;
+        for (CompteClient compte : comptes) {
+            if (compte.getNumero().equals(numeroCompteClient)) {
+                return compte;
+            }
+        }
+        return null;
     }
+
 
     /**
      * Vérifier qu'un compte-bancaire appartient bien au compte-client.
