@@ -13,9 +13,8 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean crediter(double montant) {
-        if(montant > 0) {
-            double solde = getSolde();
-            solde += montant;
+        if(montant > 0 && montant <= solde) {
+            solde = solde + montant;
             return true;
         }
             return false;
@@ -25,9 +24,8 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean debiter(double montant) {
-        if(montant > 0) {
-            double solde = getSolde();
-            solde -= montant;
+        if(montant > 0 && montant <= solde) {
+            solde = solde - montant;
             return true;
         }
         return false;
@@ -35,11 +33,24 @@ public class CompteCheque extends CompteBancaire{
 
     @Override
     public boolean payerFacture(String numeroFacture, double montant, String description) {
+        if(montant <= solde && montant>0){
+            solde = solde - montant;
+            System.out.println("Détails de la facture");
+            System.out.println("Numéro de facture: " + numeroFacture + "\n" +
+                     "Le montant à payer: " + montant + "\n" +
+                     "Description de la facture" + description);
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean transferer(double montant, String numeroCompteDestinataire) {
+        if(montant <= solde && montant>0){
+            solde = solde - montant;
+            System.out.println("Un montant de " + montant + "a été transférer au compte " + numeroCompteDestinataire);
+            return true;
+        }
         return false;
     }
 }

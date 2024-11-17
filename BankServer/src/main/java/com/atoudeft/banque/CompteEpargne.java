@@ -18,9 +18,8 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean crediter(double montant) {
-        if(montant > 0) {
-            double solde = getSolde();
-            solde += montant;
+        if(montant > 0 && montant <= solde) {
+            solde = solde + montant;
             return true;
         }
         return false;
@@ -28,17 +27,16 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean debiter(double montant) {
-        double solde = getSolde();
-        if(solde > 0 && solde < 1000){
-            if(montant > 0) {
-                solde -= montant - 2 ;
+        if(solde > 0 && solde < limite){
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant - frais;
                 return true;
             } else {
                 return false;
             }
         } else {
-            if(montant > 0) {
-                solde -= montant;
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant;
                 return true;
             } else {
                 return false;
@@ -50,12 +48,50 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean payerFacture(String numeroFacture, double montant, String description) {
-        return false;
+        if(solde > 0 && solde < limite){
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant - frais;
+                System.out.println("Détails de la facture");
+                System.out.println("Numéro de facture: " + numeroFacture + "\n" +
+                        "Le montant à payer: " + montant + "\n" +
+                        "Description de la facture" + description);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant;
+                System.out.println("Détails de la facture");
+                System.out.println("Numéro de facture: " + numeroFacture + "\n" +
+                        "Le montant à payer: " + montant + "\n" +
+                        "Description de la facture" + description);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     @Override
     public boolean transferer(double montant, String numeroCompteDestinataire) {
-        return false;
+        if(solde > 0 && solde < limite){
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant - frais;
+                System.out.println("Transfert d'un montant de " + montant + "au compte " + numeroCompteDestinataire);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if(montant > 0 && montant <= solde) {
+                solde = solde - montant;
+                System.out.println("Un montant de " + montant + "a été transférer au compte " + numeroCompteDestinataire);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public double getTauxInterets() {
@@ -67,8 +103,7 @@ public class CompteEpargne extends CompteBancaire{
     }
 
     public void ajouterInterets(double interets) {
-        double solde = getSolde();
         double interetsSolde = solde * interets;
-        solde += interetsSolde;
+        solde = solde * interetsSolde;
     }
 }

@@ -96,6 +96,10 @@ public class Banque implements Serializable {
      */
     public boolean ajouter(String numCompteClient, String nip) {
         if (numCompteClient.length() < 6 || numCompteClient.length() > 8 || !numCompteClient.matches("[A-Z0-9]+")) {
+
+        String chiffreAlhabet = "[A-Z0-9]+";
+        String chiffre = "[0-9]+";
+
             return false;
         }
 

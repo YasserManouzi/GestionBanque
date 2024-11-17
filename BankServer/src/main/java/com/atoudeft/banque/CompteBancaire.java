@@ -3,9 +3,9 @@ package com.atoudeft.banque;
 import java.io.Serializable;
 
 public abstract class CompteBancaire implements Serializable {
-    private String numero;
-    private TypeCompte type;
-    private double solde;
+    protected String numero;
+    protected TypeCompte type;
+    protected double solde;
 
     /**
      * Génère un numéro de compte bancaire aléatoirement avec le format CCC00C, où C est un caractère alphabétique
@@ -47,4 +47,9 @@ public abstract class CompteBancaire implements Serializable {
     public abstract boolean debiter(double montant);
     public abstract boolean payerFacture(String numeroFacture, double montant, String description);
     public abstract boolean transferer(double montant, String numeroCompteDestinataire);
+
+    public void setSolde(double solde) {
+        this.solde = solde;
+    }
 }
+
