@@ -92,8 +92,8 @@ public class CompteEpargne extends CompteBancaire{
         this.tauxInterets = tauxInterets;
     }
 
-    public void ajouterInterets(double interets) {
+    public double ajouterInterets(double interets) {
         double interetsSolde = solde * interets;
-        solde = solde * interetsSolde;
+        return solde = solde * interetsSolde;
     }
 }
