@@ -20,6 +20,7 @@ public class CompteEpargne extends CompteBancaire{
     public boolean crediter(double montant) {
         if(montant > 0) {
             solde = solde + montant;
+            ajouterHistorique(new OperationDepot(montant));
             return true;
         }
         return false;
@@ -30,6 +31,7 @@ public class CompteEpargne extends CompteBancaire{
         if(solde > 0 && solde < limite){
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant - frais;
+                ajouterHistorique(new OperationRetrait(montant));
                 return true;
             } else {
                 return false;
@@ -37,6 +39,7 @@ public class CompteEpargne extends CompteBancaire{
         } else {
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant;
+                ajouterHistorique(new OperationRetrait(montant));
                 return true;
             } else {
                 return false;
@@ -51,6 +54,7 @@ public class CompteEpargne extends CompteBancaire{
         if(solde > 0 && solde < limite){
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant - frais;
+                ajouterHistorique(new OperationFacture(montant, numeroFacture, description));
                 return true;
             } else {
                 return false;
@@ -58,6 +62,7 @@ public class CompteEpargne extends CompteBancaire{
         } else {
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant;
+                ajouterHistorique(new OperationFacture(montant, numeroFacture, description));
                 return true;
             } else {
                 return false;
@@ -70,6 +75,7 @@ public class CompteEpargne extends CompteBancaire{
         if(solde > 0 && solde < limite){
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant - frais;
+                ajouterHistorique(new OperationTransfer(montant, numeroCompteDestinataire));
                 return true;
             } else {
                 return false;
@@ -77,6 +83,7 @@ public class CompteEpargne extends CompteBancaire{
         } else {
             if(montant > 0 && montant <= solde) {
                 solde = solde - montant;
+                ajouterHistorique(new OperationTransfer(montant, numeroCompteDestinataire));
                 return true;
             } else {
                 return false;
