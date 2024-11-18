@@ -306,6 +306,38 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                         }
                     }
                     break;
+                /******************* HISTORIQUE *******************/
+                case "HIST":
+                    if (cnx.getNumeroCompteClient() == null) {
+                        cnx.envoyer("HIST NO");
+                        break;
+                    }
+
+                    banque = serveurBanque.getBanque();
+                    compteClient = banque.getCompteClient(cnx.getNumeroCompteClient());
+                    if (compteClient == null) {
+                        cnx.envoyer("HIST NO");
+                        break;
+                    }
+
+                    numCompteClient = cnx.getNumeroCompteActuel();
+                    for (CompteBancaire compteBancaire : compteClient.getComptes()) {
+                        if (compteBancaire.getNumero().equals(numCompteClient)) {
+                            PileChaineeSimple historique = compteBancaire.getHistorique();
+
+                            if (historique.estVide()) {
+                                cnx.envoyer("HIST Aucune opération n'a été fait");
+                            } else {
+                                String historiqueTexte = "HIST\n"+ "Opérations :\n";
+                                while (!historique.estVide()) {
+                                    historiqueTexte += historique.depiler() + "\n";
+                                }
+                                cnx.envoyer(historiqueTexte);
+                            }
+                            break;
+                        }
+                    }
+                    break;
 
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default: //Renvoyer le texte recu convertit en majuscules :
