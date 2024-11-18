@@ -1,8 +1,9 @@
 package com.atoudeft.banque;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public abstract class Operation {
+public abstract class Operation implements Serializable {
     private TypeOperation type;
     private Date date;
 
