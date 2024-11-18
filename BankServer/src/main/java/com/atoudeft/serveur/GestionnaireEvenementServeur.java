@@ -227,7 +227,7 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                             cnx.envoyer("TRANSFER NO");
                             break;
                         }
-                        numCompteClient = cnx.getNumeroCompteClient();
+                        numCompteClient = cnx.getNumeroCompteActuel();
                         for (CompteBancaire compteBancaire : compteClient.getComptes()) {
                             if (compteBancaire.getNumero().equals(numCompteClient)) {
                                 if (compteBancaire.transferer(montant, numeroCompteReceveur)) {
@@ -235,19 +235,20 @@ public class GestionnaireEvenementServeur implements GestionnaireEvenement {
                                     CompteClient compteClientReceveur = banque.getCompteClient(cnx.getNumeroCompteClient());
                                     for (CompteBancaire compteBancaireReceveur : compteClientReceveur.getComptes()) {
                                         if (compteBancaireReceveur.getNumero().equals(numeroCompteReceveur)) {
-                                            compteBancaireReceveur.crediter(montant);
-                                            cnx.envoyer("TRANSFER OK");
-                                        } else {
-                                            cnx.envoyer("TRANSFER NO");
+                                            if(compteBancaireReceveur.crediter(montant)){
+
+                                            } else {
+                                                cnx.envoyer("TRANSFER NO");
+                                            }
                                         }
                                     }
                                 } else {
                                     cnx.envoyer("TRANSFERT NO");
                                 }
-                                break;
                             }
                         }
                     }
+                    break;
 
                 /******************* CONNEXION À UN COMPTE *******************/
                 case "CONNECT":

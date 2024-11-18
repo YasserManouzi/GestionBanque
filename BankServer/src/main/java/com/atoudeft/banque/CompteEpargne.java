@@ -18,7 +18,7 @@ public class CompteEpargne extends CompteBancaire{
 
     @Override
     public boolean crediter(double montant) {
-        if(montant > 0 && montant <= solde) {
+        if(montant > 0) {
             solde = solde + montant;
             return true;
         }
