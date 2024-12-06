@@ -1,6 +1,7 @@
 package com.atoudeft.controleur;
 
 import com.atoudeft.client.Client;
+import com.atoudeft.vue.PanneauConfigServeur;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +52,38 @@ public class EcouteurMenuPrincipal implements ActionListener {
                     }
                     break;
                 case "CONFIGURER":
-                    //TODO : compléter (question 1.3)
+                    boolean configurationValide = false;
+                    do {
+                        PanneauConfigServeur panneauConfig = new PanneauConfigServeur(client.getAdrServeur(), client.getPortServeur());
+
+                        int resultat = JOptionPane.showConfirmDialog(
+                                fenetre,
+                                panneauConfig,
+                                "Configurer le serveur",
+                                JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.PLAIN_MESSAGE
+                        );
+
+                        if (resultat == JOptionPane.OK_OPTION) {
+                            try {
+                                String nouvelleAdresse = panneauConfig.getAdresseServeur();
+                                int nouveauPort = Integer.parseInt(panneauConfig.getPortServeur());
+                                client.setAdrServeur(nouvelleAdresse);
+                                client.setPortServeur(nouveauPort);
+
+                                configurationValide = true;
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(
+                                        fenetre,
+                                        "Le numéro de port doit être un entier valide.",
+                                        "Erreur de configuration",
+                                        JOptionPane.ERROR_MESSAGE
+                                );
+                            }
+                        } else {
+                            configurationValide = true;
+                        }
+                    } while (!configurationValide);
                     break;
                 case "QUITTER":
                     if (client.isConnecte()) {
@@ -67,6 +99,7 @@ public class EcouteurMenuPrincipal implements ActionListener {
                         System.exit(0);
                     break;
             }
+
         }
     }
 }
