@@ -66,6 +66,10 @@ public class PanneauPrincipal  extends JPanel {
         this.add(panneauCompteClient, BorderLayout.CENTER);
         panneauCompteClient.setVisible(false);
     }
+    public PanneauOperationsCompte getPanneauOperationsCompte() {
+        return panneauOperationsCompte;
+    }
+
 
     /**
      * Vide les éléments d'interface du panneauPrincipal.

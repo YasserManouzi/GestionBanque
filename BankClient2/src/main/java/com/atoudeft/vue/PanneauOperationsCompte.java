@@ -42,4 +42,8 @@ public class PanneauOperationsCompte extends JPanel {
         bFacture.addActionListener(ecouteur);
         bHistorique.addActionListener(ecouteur);
     }
+
+    public JLabel getLblSolde() {
+        return lblSolde;
+    }
 }

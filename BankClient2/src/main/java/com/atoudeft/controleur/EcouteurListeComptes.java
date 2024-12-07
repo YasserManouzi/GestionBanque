@@ -21,6 +21,23 @@ public class EcouteurListeComptes extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
-        //à compléter
+        if (evt.getClickCount() == 2) {
+            JList<String> list = (JList<String>) evt.getSource();
+            int selectedIndex = list.getSelectedIndex();
+
+            if (selectedIndex != -1) {
+                String typeCompte = "";
+                if (selectedIndex == 0) {
+                    typeCompte = "cheque";
+                    client.envoyer("SELECT " + typeCompte);
+                }
+                else if (selectedIndex == 1) {
+                    typeCompte = "epargne";
+                    client.envoyer("SELECT " + typeCompte);
+                }
+            } else {
+                JOptionPane.showMessageDialog(list, "Aucun compte sélectionné.");
+            }
+        }
     }
 }

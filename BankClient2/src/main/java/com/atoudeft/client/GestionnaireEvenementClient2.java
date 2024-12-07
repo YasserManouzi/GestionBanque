@@ -97,7 +97,28 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
 
                 case "SELECT" :
                     arg = evenement.getArgument();
-                    JOptionPane.showMessageDialog(panneauPrincipal,"SELECT "+arg);
+                    if (arg.startsWith("OK")) {
+                        String[] data = arg.split(" ");
+                        if (data.length >= 3) {
+                            String solde = data[2];
+
+                            try {
+                                panneauPrincipal.getPanneauOperationsCompte().getLblSolde().setText("Solde : " + solde);
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(panneauPrincipal,
+                                        "Erreur : Le solde du compte n'est pas valide.",
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(panneauPrincipal,
+                                    "Erreur : Réponse du serveur incorrecte. Format des données invalide.",
+                                    "Erreur", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else if (arg.startsWith("NO")) {
+                        JOptionPane.showMessageDialog(panneauPrincipal,
+                                "Impossible de sélectionner ce compte. Détails : ",
+                                "Erreur", JOptionPane.WARNING_MESSAGE);
+                    }
                     break;
 
                 /******************* OPÉRATIONS BANCAIRES *******************/
