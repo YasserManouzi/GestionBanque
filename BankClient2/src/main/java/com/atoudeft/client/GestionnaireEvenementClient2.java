@@ -3,10 +3,12 @@ package com.atoudeft.client;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
+import com.atoudeft.vue.PanneauHistorique;
 import com.atoudeft.vue.PanneauPrincipal;
 import com.programmes.MainFrame;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
     private Client client;
@@ -80,13 +82,13 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                     }
                     break;
                 /******************* SÉLECTION DE COMPTES *******************/
-                case "EPARGNE":
+                case "EPARGNE" :
                     arg = evenement.getArgument();
                     if (arg.length() > 3) {
-                        panneauPrincipal.ajouterCompte(arg.trim());
-                        JOptionPane.showMessageDialog(panneauPrincipal,
-                                "Compte épargne créé avec succès !" + arg,
-                                "Succès", JOptionPane.INFORMATION_MESSAGE);
+                            panneauPrincipal.ajouterCompte(arg.trim());
+                            JOptionPane.showMessageDialog(panneauPrincipal,
+                                    "Compte épargne créé avec succès !" + arg,
+                                    "Succès", JOptionPane.INFORMATION_MESSAGE);
 
                     } else {
                         JOptionPane.showMessageDialog(panneauPrincipal,
@@ -94,7 +96,6 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                                 "Erreur", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
-
                 case "SELECT" :
                     arg = evenement.getArgument();
                     if (arg.startsWith("OK")) {
@@ -125,18 +126,24 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                 case "DEPOT" :
                     arg = evenement.getArgument();
                     JOptionPane.showMessageDialog(panneauPrincipal,"DEPOT "+arg);
-                    break;
-                case "RETRAIT" :
-                    arg = evenement.getArgument();
-                    JOptionPane.showMessageDialog(panneauPrincipal,"RETRAIT "+arg);
-                    break;
-                case "FACTURE" :
-                    arg = evenement.getArgument();
-                    JOptionPane.showMessageDialog(panneauPrincipal,"FACTURE" + arg);
-                    break;
-                case "TRANSFER" :
-                    arg = evenement.getArgument();
-                    JOptionPane.showMessageDialog(panneauPrincipal,"TRANSFER " + arg);
+                    if (arg.startsWith("OK")) {
+                        String[] data = arg.split(" ");
+                        if (data.length >= 2) {
+                            String solde = data[1];
+                            try {
+                                Double.parseDouble(solde);
+                                panneauPrincipal.getPanneauOperationsCompte().getLblSolde().setText("Solde : " + solde);
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(panneauPrincipal,
+                                        "Erreur : Le solde du compte n'est pas valide.",
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(panneauPrincipal,
+                        "Erreur : Réponse du serveur incorrecte. Format des données invalide.",
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
                     break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default:
