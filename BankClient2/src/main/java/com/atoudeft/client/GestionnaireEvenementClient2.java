@@ -167,6 +167,41 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                                 "Erreur", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
+                case "FACTURE" :
+                    arg = evenement.getArgument();
+                    JOptionPane.showMessageDialog(panneauPrincipal,"FACTURE " + arg);
+                    if (arg.startsWith("OK")) {
+                        String[] data = arg.split(" ");
+                        if (data.length >= 2) {
+                            String solde = data[1];
+                            try {
+                                Double.parseDouble(solde);
+                                panneauPrincipal.getPanneauOperationsCompte().getLblSolde().setText("Solde : " + solde);
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(panneauPrincipal,
+                                        "Erreur : Le solde du compte n'est pas valide.",
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(panneauPrincipal,
+                                "Erreur : Réponse du serveur incorrecte. Format des données invalide.",
+                                "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "HIST":
+                    arg = evenement.getArgument();
+                    JTextArea textAreaHistorique = new JTextArea(arg);
+                    textAreaHistorique.setEditable(false);
+                    textAreaHistorique.setPreferredSize(new Dimension(500, 400));
+
+                    JOptionPane.showMessageDialog(
+                            panneauPrincipal,
+                            textAreaHistorique,
+                            "Historique du compte",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    break;
                 /******************* TRAITEMENT PAR DÉFAUT *******************/
                 default:
                     System.out.println("RECU : "+evenement.getType()+" "+evenement.getArgument());

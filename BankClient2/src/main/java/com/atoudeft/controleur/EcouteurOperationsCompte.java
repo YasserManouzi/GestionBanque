@@ -51,6 +51,22 @@ public class EcouteurOperationsCompte implements ActionListener {
                 dialogRetrait.setVisible(true);
                 client.envoyer("RETRAIT " + panneauRetrait.getMontantRetrait());
                 break;
+            case "FACTURE":
+                PanneauFacture panneauFacture = new PanneauFacture();
+
+                JDialog dialogFacture = new JDialog(fenetre, "Paiement de la facture", true);
+                dialogFacture.setLayout(new BorderLayout());
+                dialogFacture.add(panneauFacture, BorderLayout.CENTER);
+
+                dialogFacture.setSize(300, 300);
+                dialogFacture.setLocationRelativeTo(fenetre);
+
+                dialogFacture.setVisible(true);
+                client.envoyer("FACTURE " + panneauFacture.getMontantFacture() + " " + panneauFacture.getNumeroFacture() + " "+ panneauFacture.getDescriptionFacture());
+                break;
+            case "HIST":
+                client.envoyer("HIST");
+                break;
             case "EPARGNE":
                 client.envoyer("EPARGNE");
         }
