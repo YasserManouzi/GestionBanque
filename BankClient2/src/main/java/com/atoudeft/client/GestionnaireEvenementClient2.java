@@ -3,7 +3,6 @@ package com.atoudeft.client;
 import com.atoudeft.commun.evenement.Evenement;
 import com.atoudeft.commun.evenement.GestionnaireEvenement;
 import com.atoudeft.commun.net.Connexion;
-import com.atoudeft.vue.PanneauHistorique;
 import com.atoudeft.vue.PanneauPrincipal;
 import com.programmes.MainFrame;
 
@@ -170,6 +169,28 @@ public class GestionnaireEvenementClient2 implements GestionnaireEvenement {
                 case "FACTURE" :
                     arg = evenement.getArgument();
                     JOptionPane.showMessageDialog(panneauPrincipal,"FACTURE " + arg);
+                    if (arg.startsWith("OK")) {
+                        String[] data = arg.split(" ");
+                        if (data.length >= 2) {
+                            String solde = data[1];
+                            try {
+                                Double.parseDouble(solde);
+                                panneauPrincipal.getPanneauOperationsCompte().getLblSolde().setText("Solde : " + solde);
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(panneauPrincipal,
+                                        "Erreur : Le solde du compte n'est pas valide.",
+                                        "Erreur", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(panneauPrincipal,
+                                "Erreur : Réponse du serveur incorrecte. Format des données invalide.",
+                                "Erreur", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+                case "TRANSFER" :
+                    arg = evenement.getArgument();
+                    JOptionPane.showMessageDialog(panneauPrincipal,"TRANSFER " + arg);
                     if (arg.startsWith("OK")) {
                         String[] data = arg.split(" ");
                         if (data.length >= 2) {
