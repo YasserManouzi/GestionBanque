@@ -12,16 +12,16 @@ public class PanneauFacture extends JPanel {
 
     public PanneauFacture() {
         bFacture = new JButton("Payer votre facture");
-        lblMontantFacture = new JLabel("Facture : ");
+        lblMontantFacture = new JLabel("Facture à payer: ");
         txtMontantFacture = new JTextField(20);
         lblNumeroFacture = new JLabel("Numéro de la facture : ");
-        txtNumeroFacture = new JTextField((30));
+        txtNumeroFacture = new JTextField((20));
         lblDescriptionFacture = new JLabel("Description de la facture : ");
-        txtDescriptionFacture = new JTextField((30));
+        txtDescriptionFacture = new JTextField((20));
 
         bFacture.setActionCommand("FACTURE");
 
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         this.add(lblMontantFacture);
         this.add(txtMontantFacture);
         this.add(lblNumeroFacture);

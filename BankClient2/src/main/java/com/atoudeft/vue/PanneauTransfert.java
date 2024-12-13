@@ -14,11 +14,11 @@ public class PanneauTransfert extends JPanel{
         lblMontantTransfert = new JLabel("Montant à transférer : ");
         txtMontantTransfert = new JTextField(20);
         lblNumeroTransfert = new JLabel("Numéro du compte pour le transfert : ");
-        txtNumeroTransfert = new JTextField((30));
+        txtNumeroTransfert = new JTextField((20));
 
         bTransfert.setActionCommand("TRANSFER");
 
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         this.add(lblMontantTransfert);
         this.add(txtMontantTransfert);
         this.add(lblNumeroTransfert);

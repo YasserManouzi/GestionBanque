@@ -31,7 +31,7 @@ public class EcouteurOperationsCompte implements ActionListener {
                 dialogDepot.setLayout(new BorderLayout());
                 dialogDepot.add(panneauDepot, BorderLayout.CENTER);
 
-                dialogDepot.setSize(300, 150);
+                dialogDepot.setSize(370, 110);
                 dialogDepot.setLocationRelativeTo(fenetre);
 
                 dialogDepot.setVisible(true);
@@ -45,7 +45,7 @@ public class EcouteurOperationsCompte implements ActionListener {
                 dialogRetrait.setLayout(new BorderLayout());
                 dialogRetrait.add(panneauRetrait, BorderLayout.CENTER);
 
-                dialogRetrait.setSize(300, 150);
+                dialogRetrait.setSize(370, 110);
                 dialogRetrait.setLocationRelativeTo(fenetre);
 
                 dialogRetrait.setVisible(true);
@@ -58,7 +58,7 @@ public class EcouteurOperationsCompte implements ActionListener {
                 dialogTransfert.setLayout(new BorderLayout());
                 dialogTransfert.add(panneauTransfert, BorderLayout.CENTER);
 
-                dialogTransfert.setSize(300, 300);
+                dialogTransfert.setSize(480, 140);
                 dialogTransfert.setLocationRelativeTo(fenetre);
 
                 dialogTransfert.setVisible(true);
@@ -71,7 +71,7 @@ public class EcouteurOperationsCompte implements ActionListener {
                 dialogFacture.setLayout(new BorderLayout());
                 dialogFacture.add(panneauFacture, BorderLayout.CENTER);
 
-                dialogFacture.setSize(300, 300);
+                dialogFacture.setSize(400, 160);
                 dialogFacture.setLocationRelativeTo(fenetre);
 
                 dialogFacture.setVisible(true);

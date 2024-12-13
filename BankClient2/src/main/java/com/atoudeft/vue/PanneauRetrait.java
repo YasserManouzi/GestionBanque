@@ -15,7 +15,7 @@ public class PanneauRetrait extends JPanel {
 
         bRetrait.setActionCommand("RETRAIT");
 
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         this.add(lblMontantRetrait);
         this.add(txtMontantRetrait);
         this.add(bRetrait);

@@ -16,7 +16,7 @@ public class PanneauDepot extends JPanel {
 
         bDepot.setActionCommand("DEPOT");
 
-        this.setLayout(new FlowLayout(FlowLayout.LEFT));
+        this.setLayout(new FlowLayout(FlowLayout.CENTER));
         this.add(lblMontantDepot);
         this.add(txtMontantDepot);
         this.add(bDepot);
