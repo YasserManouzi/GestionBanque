@@ -1,9 +1,9 @@
 # Bank Account Management Application in Java.
 An interface developed using Swing that allows the management of bank accounts with features such as user login, adding new bank accounts, and performing various operations by the user. Available in both console and graphical interface versions.
-![image](https://github.com/user-attachments/assets/58f5b9eb-ae9e-41a0-9bb3-63d18c128e3b)
-<h4> Home screen with navigation menu:</h4>
 
-![image](https://github.com/user-attachments/assets/71dda853-f7ce-4b06-9cb5-909509a44375)
+<h4> Home screen with navigation menu:</h4>
+![image](https://github.com/user-attachments/assets/58f5b9eb-ae9e-41a0-9bb3-63d18c128e3b)
+
 <h4> Home menu for a connected account:</h4>
 
 ![image](https://github.com/user-attachments/assets/84ae0a18-7a44-4e3d-889b-8ed313198c16)
